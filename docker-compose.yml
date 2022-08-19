@@ -1,0 +1,49 @@
+version : '3.2'
+services:
+    loadbalancing:
+        image: loadbalancing
+        build:
+            context: .
+            dockerfile: 'Dockerfile'
+    lb:
+        image: haproxy:2.2
+        restart: always
+        ports:
+            - "3005:3005"
+        volumes:
+            - ./haproxy:/usr/local/etc/haproxy
+        deploy:
+            resources:
+                limits:
+                    memory: 500M
+        container_name: Haproxy
+    nodeapp1:
+        image: loadbalancing
+        restart: always
+        deploy:
+            resources:
+                limits:
+                    memory: 500M
+        environment:
+            - APP_PORT=1111
+        container_name: Nodeserver1
+    nodeapp2:
+        image: loadbalancing
+        restart: always
+        deploy:
+            resources:
+                limits:
+                    memory: 500M
+        environment:
+            - APP_PORT=2222
+        container_name: Nodeserver2
+    nodeapp3:
+        image: loadbalancing
+        restart: always
+        deploy:
+            resources:
+                limits:
+                    memory: 500M
+        environment:
+            - APP_PORT=3333
+        container_name: Nodeserver3
